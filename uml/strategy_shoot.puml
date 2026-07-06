@@ -1,0 +1,68 @@
+@startuml strategy_shoot
+
+title 策略模式 - 子弹发射方式(Strategy Pattern)
+
+skinparam defaultTextAlignment center
+
+class BulletProp {
+    +action(heroAircraft) : void
+}
+
+class BulletPlusProp {
+    +action(heroAircraft) : void
+}
+
+abstract class AbstractAircraft {
+    -ShootStrategy shootStrategy
+    +AbstractAircraft(locationX, locationY, speedX, speedY, hp, shootStrategy)
+    +setShootStrategy(shootStrategy) : void
+    +executeShootStrategy() : List<BaseBullet>
+    +getLocationX() : int
+    +getLocationY() : int
+    +getSpeedY() : int
+    {abstract}+createBullet(locationX, locationY, speedX, speedY, power) : BaseBullet
+}
+
+abstract class ShootStrategy {
+    #int shootNum
+    #int power
+    #int direction
+    #int YOffset
+    #int speedFactor
+    +ShootStrategy(shootNum, power, direction, YOffset, speedFactor)
+    {abstract}+shoot(aircraft) : List<BaseBullet>
+}
+
+class DirectShootStrategy {
+    -final int XInterval
+    +DirectShootStrategy(shootNum, power, direction, YOffset, speedFactor, XInterval)
+    +shoot(aircraft) : List<BaseBullet>
+}
+
+class SectorShootStrategy {
+    -final int speedXInterval
+    +SectorShootStrategy(shootNum, power, direction, YOffset, speedFactor, speedXInterval)
+    +shoot(aircraft) : List<BaseBullet>
+}
+
+class CircleShootStrategy {
+    -final int radiusX
+    -final int radiusY
+    -final int angleSpan
+    +CircleShootStrategy(shootNum, power, direction, YOffset, speedFactor, radiusX, radiusY, angleSpan)
+    +shoot(aircraft) : List<BaseBullet>
+}
+
+ShootStrategy <|-down- DirectShootStrategy : 泛化
+ShootStrategy <|-down- SectorShootStrategy : 泛化
+ShootStrategy <|-down- CircleShootStrategy : 泛化
+
+AbstractAircraft o-down-> ShootStrategy : 聚合
+
+BulletProp -down-> AbstractAircraft : 一般关联
+BulletPlusProp -down-> AbstractAircraft : 一般关联
+
+BulletProp .down.> SectorShootStrategy : 依赖
+BulletPlusProp .down.> CircleShootStrategy : 依赖
+
+@enduml

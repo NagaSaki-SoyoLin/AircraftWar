@@ -1,0 +1,91 @@
+@startuml observer_prop
+
+title 观察者模式 - 道具生效机制(Observer Pattern)
+
+interface PropSubject {
+    +addEnemy(enemy) : void
+    +notifyEnemy() : void
+}
+
+interface EnemyObserver {
+    +onBomb() : int
+    +onFreeze() : void
+}
+
+class BombProp {
+    -int gainScore = 0
+    ~List<EnemyObserver> enemyAircrafts
+    +addEnemy(enemy) : void
+    +notifyEnemy() : void
+    +action(heroAircraft) : void
+    +getGainScore() : int
+}
+
+class FreezeProp {
+    ~List<EnemyObserver> enemyAircrafts
+    +addEnemy(enemy) : void
+    +notifyEnemy() : void
+    +action(heroAircraft) : void
+}
+
+abstract class AbstractEnemyAircraft {
+    {abstract}+onBomb() : int
+    {abstract}+onFreeze() : void
+}
+
+class MobEnemy {
+    +onBomb() : int
+    +onFreeze() : void
+}
+
+class EliteEnemy {
+    +onBomb() : int
+    +onFreeze() : void
+}
+
+class ElitePlusEnemy {
+    +onBomb() : int
+    +onFreeze() : void
+}
+
+class EliteProEnemy {
+    +onBomb() : int
+    +onFreeze() : void
+}
+
+class BossEnemy {
+    +onBomb() : int
+    +onFreeze() : void
+}
+
+class EnemyBullet {
+    +onBomb() : int
+    +onFreeze() : void
+}
+
+class Game {
+    ~List<AbstractEnemyAircraft> enemyAircrafts
+    -List<BaseBullet> enemyBullets
+    -List<Prop> props
+    --
+    -crashCheckAction() : void
+}
+
+Game ..> PropSubject : 注册观察者
+Game ..> EnemyObserver : 注册\n(敌机&敌机子弹)
+
+BombProp .up.|> PropSubject : 实现
+FreezeProp .up.|> PropSubject : 实现
+
+AbstractEnemyAircraft .up.|> EnemyObserver : 实现
+AbstractEnemyAircraft <|-- MobEnemy : 泛化
+AbstractEnemyAircraft <|-- EliteEnemy : 泛化
+AbstractEnemyAircraft <|-- ElitePlusEnemy : 泛化
+AbstractEnemyAircraft <|-- EliteProEnemy : 泛化
+AbstractEnemyAircraft <|-- BossEnemy : 泛化
+
+EnemyBullet .up.|> EnemyObserver : 实现
+
+PropSubject o-right-> EnemyObserver : 注册/通知\n(一对多依赖
+
+@enduml

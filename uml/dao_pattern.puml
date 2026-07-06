@@ -1,0 +1,48 @@
+@startuml dao_pattern
+
+title 数据访问对象(DAO)模式类图 - 飞机大战分数记录持久化
+
+class ScoreRecord {
+    -String playerName
+    -int score
+    -String time
+    +ScoreRecord()
+    +ScoreRecord(playerName, score, time)
+    +getPlayerName() : String
+    +setPlayerName(playerName) : void
+    +getScore() : int
+    +setScore(score) : void
+    +getTime() : String
+    +setTime(time) : void
+}
+
+interface ScoreDao {
+    +getAllScoreRecords() : ArrayList<ScoreRecord>
+    +doAdd(ScoreRecord scoreRecord) : void
+    +doDelete(index) : void
+}
+
+class ScoreDaoByFile {
+    -String filePath
+    +setFilePath(filePath) : void
+    +getAllScoreRecords() : ArrayList<ScoreRecord>
+    +doAdd(ScoreRecord scoreRecord) : void
+    +doDelete(index) : void
+    -readFile(filePath) : ArrayList<ScoreRecord>
+    -writeFile(filePath, scoreRecords) : void
+}
+
+class Game {
+    -int score
+    #String daoFilePath
+    #String difficultyName
+    -MusicController musicController
+    --
+    -gameOverAction() : void
+}
+
+ScoreDao <|.. ScoreDaoByFile : 实现
+Game .right.> ScoreDao : 依赖
+ScoreDaoByFile -left-> ScoreRecord : 使用
+
+@enduml

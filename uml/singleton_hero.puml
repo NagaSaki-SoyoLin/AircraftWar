@@ -1,0 +1,21 @@
+@startuml singleton_hero
+
+title 单例模式 - 英雄机创建(Singleton Pattern)
+
+skinparam defaultTextAlignment center
+
+class HeroAircraft {
+    {static}-volatile heroAircraft : HeroAircraft
+    {static}-final defaultShootStrategy : ShootStrategy
+    -HeroAircraft(locationX, locationY, speedX, speedY, hp, shootStrategy)
+    {static}+getHeroAircraft() : HeroAircraft
+}
+
+class Game {
+    -HeroAircraft heroAircraft
+    +Game()
+}
+
+Game --> HeroAircraft : 一般关联
+
+@enduml

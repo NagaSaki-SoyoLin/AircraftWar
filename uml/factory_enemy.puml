@@ -1,0 +1,91 @@
+@startuml factory_enemy
+
+title 工厂方法模式 - 敌机创建(Factory Method Pattern)
+
+skinparam defaultTextAlignment center
+
+class Game {
+    ~List<AbstractEnemyAircraft> enemyAircrafts
+    #Map<EnemyAircraftFactory,Integer> normalFactoryWeights
+    #boolean canSpawnBoss
+    #int bossSpawnThreshold
+    #int bossHpBase
+    #int bossSummonCount
+    -int spawnCounter
+    -int score
+    -boolean isBossExist
+    -int lastBossScore
+    -enemyEmergeAction() : void
+}
+
+interface EnemyAircraftFactory {
+    +createEnemyAircraft() : AbstractEnemyAircraft
+}
+
+class MobEnemyFactory {
+    +createEnemyAircraft() : AbstractEnemyAircraft
+}
+
+class EliteEnemyFactory {
+    +createEnemyAircraft() : AbstractEnemyAircraft
+}
+
+class ElitePlusEnemyFactory {
+    +createEnemyAircraft() : AbstractEnemyAircraft
+}
+
+class EliteProEnemyFactory {
+    +createEnemyAircraft() : AbstractEnemyAircraft
+}
+
+class BossEnemyFactory {
+    +createEnemyAircraft() : AbstractEnemyAircraft
+}
+
+abstract class AbstractEnemyAircraft {
+    +AbstractEnemyAircraft(EnemyConfig config)
+}
+
+class MobEnemy {
+    +MobEnemy(EnemyConfig config)
+}
+
+class EliteEnemy {
+    +EliteEnemy(EnemyConfig config)
+}
+
+class ElitePlusEnemy {
+    +ElitePlusEnemy(EnemyConfig config)
+}
+
+class EliteProEnemy {
+    +EliteProEnemy(EnemyConfig config)
+}
+
+class BossEnemy {
+    +BossEnemy(EnemyConfig config)
+}
+
+
+MobEnemyFactory ..|> EnemyAircraftFactory : 实现
+EliteEnemyFactory ..|> EnemyAircraftFactory : 实现
+ElitePlusEnemyFactory ..|> EnemyAircraftFactory : 实现
+EliteProEnemyFactory ..|> EnemyAircraftFactory : 实现
+BossEnemyFactory ..|> EnemyAircraftFactory : 实现
+
+AbstractEnemyAircraft <|-- MobEnemy : 泛化
+AbstractEnemyAircraft <|-- EliteEnemy : 泛化
+AbstractEnemyAircraft <|-- ElitePlusEnemy : 泛化
+AbstractEnemyAircraft <|-- EliteProEnemy : 泛化
+AbstractEnemyAircraft <|-- BossEnemy : 泛化
+
+MobEnemyFactory ..> MobEnemy : 创建
+EliteEnemyFactory ..> EliteEnemy : 创建
+ElitePlusEnemyFactory ..> ElitePlusEnemy : 创建
+EliteProEnemyFactory ..> EliteProEnemy : 创建
+BossEnemyFactory ..> BossEnemy : 创建
+
+Game -up-> EnemyAircraftFactory : 依赖\n选择工厂
+Game -down-> AbstractEnemyAircraft : 使用\n管理敌机列表
+
+@enduml

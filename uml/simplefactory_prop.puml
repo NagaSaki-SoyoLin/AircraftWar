@@ -1,0 +1,43 @@
+@startuml simpleFactory_prop
+
+title 简单工厂模式 - 道具创建(Simple Factory Pattern)
+
+skinparam defaultTextAlignment center
+
+abstract class Prop {
+    {abstract}+action(heroAircraft) : void
+}
+
+class BloodProp {
+    +action(heroAircraft) : void
+}
+
+class BombProp {
+    +action(heroAircraft) : void
+}
+
+class BulletProp {
+    +action(heroAircraft) : void
+}
+
+class BulletPlusProp {
+    +action(heroAircraft) : void
+}
+
+class FreezeProp {
+    +action(heroAircraft) : void
+}
+
+class PropSimpleFactory {
+    {static}+createProp(propName) : Prop
+}
+
+Prop <|-- BloodProp : 泛化
+Prop <|-- BombProp : 泛化
+Prop <|-- BulletProp : 泛化
+Prop <|-right- BulletPlusProp : 泛化
+Prop <|-up- FreezeProp : 泛化
+
+PropSimpleFactory .right.> Prop : 依赖
+
+@enduml

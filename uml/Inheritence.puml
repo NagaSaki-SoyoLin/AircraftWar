@@ -1,0 +1,272 @@
+@startuml Inheritence
+
+title 继承关系类图 - 飞机大战核心实体(Inheritance)
+
+top to bottom direction
+skinparam defaultTextAlignment center
+
+abstract class AbstractFlyingObject {
+    #int locationX
+    #int locationY
+    #int speedX
+    #int speedY
+    #BufferedImage image = null
+    #int width = -1
+    #int height = -1
+    #boolean isValid = true
+    +AbstractFlyingObject()
+    +AbstractFlyingObject(locationX, locationY, speedX, speedY)
+    +forward() : void
+    +crash(flyingObject) : boolean
+    +getLocationX() : int
+    +getLocationY() : int
+    +setLocation(locationX, locationY) : void
+    +getSpeedX() : int
+    +getSpeedY() : int
+    +setSpeed(speedX, speedY) : void
+    +getImage() : BufferedImage
+    +getWidth() : int
+    +getHeight() : int
+    +vanish() : void
+    +notValid() : boolean
+}
+
+abstract class AbstractAircraft {
+    #int maxHp
+    #int hp
+    -ShootStrategy shootStrategy
+    +AbstractAircraft(locationX, locationY, speedX, speedY, hp, shootStrategy)
+    +decreaseHp(decrease) : void
+    +getHp() : int
+    +getMaxHp() : int
+    +setHp(hp) : void
+    {abstract}+createBullet(locationX, locationY, speedX, speedY, power) : BaseBullet
+    +setShootStrategy(shootStrategy) : void
+    +executeShootStrategy() : List<BaseBullet>
+}
+
+abstract class BaseBullet {
+    -int power
+    +BaseBullet(locationX, locationY, speedX, speedY, power)
+    +forward() : void
+    +getPower() : int
+    +decreasePower(decrease) : void
+}
+
+abstract class Prop {
+    +Prop()
+    +forward() : void
+    {abstract}+action(heroAircraft) : void
+}
+
+abstract class AbstractEnemyAircraft {
+    #int score
+    #int propNum
+    #double propDropRate
+    #Map<String,Integer> propWeights
+    +AbstractEnemyAircraft(EnemyConfig config)
+    +forward() : void
+    +createBullet(locationX, locationY, speedX, speedY, power) : BaseBullet
+    +getScore() : int
+    +generateProp() : Set<Prop>
+    {abstract}+onBomb() : int
+    {abstract}+onFreeze() : void
+}
+
+class HeroAircraft {
+    {static}-volatile heroAircraft : HeroAircraft
+    {static}-final defaultShootStrategy : ShootStrategy
+    -HeroAircraft(locationX, locationY, speedX, speedY, hp, shootStrategy)
+    {static}+getHeroAircraft() : HeroAircraft
+    +forward() : void
+    +createBullet(locationX, locationY, speedX, speedY, power) : BaseBullet
+    +getDefaultShootStrategy() : ShootStrategy
+}
+
+class HeroBullet {
+    +HeroBullet(locationX, locationY, speedX, speedY, power)
+}
+
+class EnemyBullet {
+    +EnemyBullet(locationX, locationY, speedX, speedY, power)
+    +onBomb() : int
+    +onFreeze() : void
+}
+
+class MobEnemy {
+    +MobEnemy(EnemyConfig config)
+    +onBomb() : int
+    +onFreeze() : void
+}
+
+class EliteEnemy {
+    +EliteEnemy(EnemyConfig config)
+    +onBomb() : int
+    +onFreeze() : void
+}
+
+class ElitePlusEnemy {
+    +ElitePlusEnemy(EnemyConfig config)
+    +onBomb() : int
+    +onFreeze() : void
+}
+
+class EliteProEnemy {
+    +EliteProEnemy(EnemyConfig config)
+    +onBomb() : int
+    +onFreeze() : void
+}
+
+class BossEnemy {
+    +BossEnemy(EnemyConfig config)
+    +onBomb() : int
+    +onFreeze() : void
+}
+
+class BloodProp {
+    +action(heroAircraft) : void
+}
+
+class BombProp {
+    -int gainScore = 0
+    ~List<EnemyObserver> enemyAircrafts
+    +addEnemy(enemy) : void
+    +notifyEnemy() : void
+    +action(heroAircraft) : void
+    +getGainScore() : int
+}
+
+class BulletProp {
+    +action(heroAircraft) : void
+}
+
+class BulletPlusProp {
+    +action(heroAircraft) : void
+}
+
+class FreezeProp {
+    ~List<EnemyObserver> enemyAircrafts
+    +addEnemy(enemy) : void
+    +notifyEnemy() : void
+    +action(heroAircraft) : void
+}
+
+abstract class ShootStrategy {
+    #int shootNum
+    #int power
+    #int direction
+    #int YOffset
+    #int speedFactor
+    +ShootStrategy(shootNum, power, direction, YOffset, speedFactor)
+    {abstract}+shoot(aircraft) : List<BaseBullet>
+}
+
+class DirectShootStrategy {
+    -final int XInterval
+    +DirectShootStrategy(shootNum, power, direction, YOffset, speedFactor, XInterval)
+    +shoot(aircraft) : List<BaseBullet>
+}
+
+class SectorShootStrategy {
+    -final int speedXInterval
+    +SectorShootStrategy(shootNum, power, direction, YOffset, speedFactor, speedXInterval)
+    +shoot(aircraft) : List<BaseBullet>
+}
+
+class CircleShootStrategy {
+    -final int radiusX
+    -final int radiusY
+    -final int angleSpan
+    +CircleShootStrategy(shootNum, power, direction, YOffset, speedFactor, radiusX, radiusY, angleSpan)
+    +shoot(aircraft) : List<BaseBullet>
+}
+
+interface EnemyAircraftFactory {
+    +createEnemyAircraft() : AbstractEnemyAircraft
+}
+
+class MobEnemyFactory {
+    +createEnemyAircraft() : AbstractEnemyAircraft
+}
+
+class EliteEnemyFactory {
+    +createEnemyAircraft() : AbstractEnemyAircraft
+}
+
+class ElitePlusEnemyFactory {
+    +createEnemyAircraft() : AbstractEnemyAircraft
+}
+
+class EliteProEnemyFactory {
+    +createEnemyAircraft() : AbstractEnemyAircraft
+}
+
+class BossEnemyFactory {
+    +createEnemyAircraft() : AbstractEnemyAircraft
+}
+
+class PropSimpleFactory {
+    {static}+createProp(propName) : Prop
+}
+
+interface PropSubject {
+    +addEnemy(enemy) : void
+    +notifyEnemy() : void
+}
+
+interface EnemyObserver {
+    +onBomb() : int
+    +onFreeze() : void
+}
+
+AbstractFlyingObject <|-right- AbstractAircraft
+AbstractFlyingObject <|-down- BaseBullet
+AbstractFlyingObject <|-up- Prop
+
+AbstractAircraft <|-- AbstractEnemyAircraft
+AbstractAircraft <|-up- HeroAircraft
+
+BaseBullet <|-right- HeroBullet
+BaseBullet <|-down- EnemyBullet
+
+Prop <|-up- BloodProp
+Prop <|-up- BombProp
+Prop <|-up- BulletProp
+Prop <|-up- BulletPlusProp
+Prop <|-up- FreezeProp
+
+AbstractEnemyAircraft <|-up- MobEnemy
+AbstractEnemyAircraft <|-up- EliteEnemy
+AbstractEnemyAircraft <|-up- ElitePlusEnemy
+AbstractEnemyAircraft <|-left- EliteProEnemy
+AbstractEnemyAircraft <|-down- BossEnemy
+
+ShootStrategy <|-up- DirectShootStrategy
+ShootStrategy <|-down- SectorShootStrategy
+ShootStrategy <|-down- CircleShootStrategy
+
+EnemyAircraftFactory <|.up. MobEnemyFactory
+EnemyAircraftFactory <|.up. EliteEnemyFactory
+EnemyAircraftFactory <|.up. ElitePlusEnemyFactory
+EnemyAircraftFactory <|.up. EliteProEnemyFactory
+EnemyAircraftFactory <|.up. BossEnemyFactory
+
+AbstractEnemyAircraft .right.|> EnemyObserver
+EnemyBullet .up.|> EnemyObserver
+BombProp .up.|> PropSubject
+FreezeProp .up.|> PropSubject
+
+AbstractAircraft o-down-> ShootStrategy
+
+MobEnemyFactory .left.> MobEnemy : 创建
+EliteEnemyFactory .left.> EliteEnemy : 创建
+ElitePlusEnemyFactory .left.> ElitePlusEnemy : 创建
+EliteProEnemyFactory .left.> EliteProEnemy : 创建
+BossEnemyFactory .left.> BossEnemy : 创建
+PropSimpleFactory ..> BloodProp : 创建
+PropSimpleFactory ..> BombProp : 创建
+PropSimpleFactory ..> BulletProp : 创建
+PropSimpleFactory ..> BulletPlusProp : 创建
+PropSimpleFactory ..> FreezeProp : 创建
+
+@enduml

@@ -1,0 +1,61 @@
+@startuml template_method_game
+
+title 模板方法模式 - 游戏难度(Template Method Pattern)
+
+abstract class AbstractGame {
+    #String difficultyName
+    #BufferedImage backGroundImage
+    #String daoFilePath
+    #int maxEnemyCount
+    #double spawnCycle
+    #double heroShootCycle
+    #double enemyShootCycle
+    #Map<EnemyAircraftFactory,Integer> normalFactoryWeights
+    #boolean canSpawnBoss
+    #int bossSpawnThreshold
+    #int bossHpBase
+    #int bossHpIncrement
+    #int difficultyUpdateTime
+    #int bossSummonCount
+    #long gameStartTime
+    #int lastUpdatedLevel
+    --
+    +AbstractGame()
+    +action() : void
+    {abstract}+initializeConfig() : void
+    +updateDifficulty() : void
+    +calculateBossHp() : int
+    #checkAndReturnNewLevel() : int
+    #getDifficultyName() : String
+    -enemyEmergeAction() : void
+    -shootAction() : void
+    -bulletsMoveAction() : void
+    -aircraftsMoveAction() : void
+    -propsMoveAction() : void
+    -crashCheckAction() : void
+    -postProcessAction() : void
+    -checkResultAction() : void
+    -gameOverAction() : void
+    +paint(g) : void
+}
+
+class GameEasy {
+    +initializeConfig() : void
+}
+
+class GameNormal {
+    +initializeConfig() : void
+    +updateDifficulty() : void
+}
+
+class GameHard {
+    +initializeConfig() : void
+    +updateDifficulty() : void
+    +calculateBossHp() : int
+}
+
+AbstractGame <|-left- GameEasy : 泛化\n简单难度
+AbstractGame <|-down- GameNormal : 泛化\n普通难度
+AbstractGame <|-right- GameHard : 泛化\n困难难度
+
+@enduml
